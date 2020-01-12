@@ -10,6 +10,7 @@
   "dependencies": {
     "axios": "^0.19.1",
     "core-js": "^3.4.3",
+    "socket.io-client": "^2.3.0",
     "vue": "^2.6.10"
   },
   "devDependencies": {
@@ -31,7 +32,10 @@
       "eslint:recommended"
     ],
     "rules": {
-      "vue/component-name-in-template-casing": ["error", "PascalCase"],
+      "vue/component-name-in-template-casing": [
+        "error",
+        "PascalCase"
+      ],
       "no-console": "off",
       "no-debugger": "off",
       "arrow-body-style": 0,
