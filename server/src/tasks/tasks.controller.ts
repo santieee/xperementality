@@ -24,7 +24,7 @@ export class TasksController {
   }
 
   @Delete()
-  async removeTask(@Body('id', ParseIntPipe) id: number){
+  async removeTask(@Body('id') id: number){
     await this.taskService.removeTask(id)
   }
 

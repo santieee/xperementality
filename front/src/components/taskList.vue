@@ -8,6 +8,7 @@
           :key="task.id"
         >
           {{task}}
+          <button @click="remove(task.id)">remove</button>
         </li>
       </ul>
     </div>
@@ -24,6 +25,10 @@
       async getTask(){
         const { data } = await window.axios('http://localhost:3000/tasks')
         this.tasks = data
+      },
+      async remove(id){
+        await window.axios.delete('http://localhost:3000/tasks', { data: {id} })
+        await this.getTask()
       }
   },
   }

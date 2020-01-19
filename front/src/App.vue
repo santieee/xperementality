@@ -45,17 +45,7 @@ export default {
   },
   methods:{
     clearForm(){
-      this.form = {...this.$options.data().form}
-      // for(let key of Object.keys(form)){
-      //   switch (typeof form[key]){
-      //     case 'string':
-      //       form[key] = ''
-      //       break
-      //     case 'object':
-      //       form[key] = Array.isArray(form[key]) ? [] : {}
-      //       break
-      //   }       
-      // }
+
     },
     sendMessage() {  
       this.socket.emit('msgToServer', 'olaoala')
