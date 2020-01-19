@@ -32,7 +32,7 @@ export class TasksService {
     return task;
   }
 
-  async createTask(createTaskDto :CreateTaskDto){
+  async createTask(createTaskDto: CreateTaskDto){
     const { title, description } = createTaskDto
     const task = new Task();
     task.title = title
