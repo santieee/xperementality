@@ -1,0 +1,48 @@
+$colors: (
+  'primary-light': #009EDE,
+  'secondary-light': #003C86,
+  'middle-light': #C0BFBF,
+  'accent-light': #82B1FF,
+  'error-light': #FF5252,
+  'info-light': #2196F3,
+  'success-light': #4CAF50,
+  'warning-light': #FFC107,
+
+  'primary-dark': #FF7400,
+  'secondary-dark': #1D7373,
+  'middle-dark': #009999,
+  'accent-dark': #33CCCC,
+  'error-dark': #540EAD,
+  'info-dark': #F60018,
+  'success-dark': #33CCCC,
+  'warning-dark': #FFC107,
+
+  'transparent': transparent
+);
+
+@function color($name) {
+  @return map_get($colors, $name);
+}
+
+:export {
+  light: {
+    primary: color('primary-light');
+    secondary: color('secondary-light');
+    middle: color('middle-light');
+    accent: color('accent-light');
+    error: color('error-light');
+    info: color('info-light');
+    success: color('success-light');
+    warning: color('warning-light');
+  }
+  dark: {
+    primary: color('primary-dark');
+    secondary: color('secondary-dark');
+    middle: color('middle-dark');
+    accent: color('accent-dark');
+    error: color('error-dark');
+    info: color('info-dark');
+    success: color('success-dark');
+    warning: color('warning-dark');
+  }
+};

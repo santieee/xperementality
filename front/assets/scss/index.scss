@@ -1,0 +1,26 @@
+@use 'normalize.scss';
+
+.container {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+.v-content__wrap{
+  padding: 3rem;
+}
+.nuxt-link-active{
+  color: unset;
+  text-decoration: none;
+}
+a {
+  color: unset !important;
+  text-decoration: none;
+}
+.nuxt-link-exact-active{
+  color: #009ede !important;
+}
+.v-slide-group__prev--disabled{
+  display: none !important;
+}

@@ -1,0 +1,12 @@
+{
+	"folders": [
+		{
+			"name": "front",
+			"path": "front"
+		},
+		{
+			"name": "server",
+			"path": "server"
+		}
+	]
+}

@@ -11,13 +11,12 @@ export class UsersService {
   ){}
  
 
-  async getUsers(){
+  async getUsers():Promise<User[]>{
     return await this.userRepository.find()
   }
 
   async findOne(userInfo): Promise<User | undefined> {
     const result = await this.userRepository.findOne(userInfo);
-    console.log(userInfo)
-    return result
+    return result;
   }
 }

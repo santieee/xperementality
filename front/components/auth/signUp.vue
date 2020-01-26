@@ -1,0 +1,81 @@
+<template>
+  <v-card>
+    <v-form 
+      v-model="valid"
+    >
+      <v-text-field
+        v-model="form.username"
+        label="Login"
+        :rules="usernameRule"
+      ></v-text-field>
+      <v-text-field
+        v-model="form.password"
+        label="Password"
+        type="password"
+        :rules="passwordRule"
+      ></v-text-field>
+      <v-text-field
+        v-model="form.rpassword"
+        label="Repeat password"
+        type="password"
+        :rules="rpasswordRule"
+      ></v-text-field>
+      <v-btn
+        block
+        @click="sign"
+        class="mt-3"
+      >
+        sign up
+      </v-btn>
+    </v-form>
+  </v-card>
+</template>
+
+<script>
+  export default {
+    name: 'signUp',
+    data: () => ({
+      form: {
+        username: '',
+        password: '',
+        rpassword: ''
+      }, 
+      valid: true,
+    }),
+    computed:{
+      usernameRule(){ 
+        return [ v => !!v || 'Required field'];
+      },
+      passwordRule(){
+        return [ 
+          v => !!v || 'Required field',
+          v => v.length >= 6 || "Min password length 6"
+        ];
+      },
+      rpasswordRule(){
+        return [
+          v => !!v || 'Required field',
+          v => v == this.form.password || 'Passwords don`t match'
+        ];
+      }
+    },
+    methods:{
+      validate(){
+        if(this.form.password !== this.form.rpassword) return false;
+        return this.valid;
+      },
+      async sign(){
+        if(!this.validate()) return;
+        const regData = {
+          username: this.form.username.replace(/^./, a => a.toUpperCase()),
+          password: this.form.password, 
+        };
+        this.$store.dispatch('auth/signUp', regData);
+      }
+    }
+  };
+</script>
+
+<style lang="scss" scoped>
+
+</style>

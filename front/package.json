@@ -1,57 +1,34 @@
 {
-  "name": "project1",
-  "version": "0.1.0",
+  "name": "nuxtapp",
+  "version": "1.0.0",
+  "description": "Nuxt.js project",
+  "author": "B.Alexander <ad.boriskin@e-soft.ru>",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
-    "watch": "vue-cli-service build --mode dev --watch",
-    "lint": "vue-cli-service lint"
+    "dev": "nuxt",
+    "build": "nuxt build",
+    "start": "nuxt start",
+    "generate": "nuxt generate",
+    "lint": "eslint --ext .js,.vue --ignore-path .gitignore .",
+    "precommit": "npm run lint"
   },
   "dependencies": {
-    "axios": "^0.19.1",
-    "core-js": "^3.4.3",
-    "socket.io-client": "^2.3.0",
-    "vue": "^2.6.10"
+    "@nuxtjs/axios": "^5.9.3",
+    "cookie-universal-nuxt": "^2.1.0",
+    "js-cookie": "^2.2.1",
+    "nuxt": "^2.0.0",
+    "vuex-persistedstate": "^2.7.0"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "^4.1.0",
-    "@vue/cli-plugin-eslint": "^4.1.0",
-    "@vue/cli-service": "^4.1.0",
-    "babel-eslint": "^10.0.3",
-    "eslint": "^5.16.0",
-    "eslint-plugin-vue": "^5.0.0",
-    "vue-template-compiler": "^2.6.10"
-  },
-  "eslintConfig": {
-    "root": true,
-    "env": {
-      "node": true
-    },
-    "extends": [
-      "plugin:vue/essential",
-      "eslint:recommended"
-    ],
-    "rules": {
-      "vue/component-name-in-template-casing": [
-        "error",
-        "PascalCase"
-      ],
-      "no-console": "off",
-      "no-debugger": "off",
-      "arrow-body-style": 0,
-      "linebreak-style": 0,
-      "import/no-unresolved": 0,
-      "no-shadow": 0,
-      "import/extensions": 0,
-      "vue/no-v-html": 0
-    },
-    "parserOptions": {
-      "parser": "babel-eslint"
-    }
-  },
-  "browserslist": [
-    "> 1%",
-    "last 2 versions"
-  ]
+    "@mdi/font": "^4.8.95",
+    "@nuxtjs/style-resources": "^1.0.0",
+    "@nuxtjs/vuetify": "^1.10.2",
+    "babel-eslint": "^10.0.1",
+    "eslint": "^4.19.1",
+    "eslint-friendly-formatter": "^4.0.1",
+    "eslint-loader": "^2.1.1",
+    "eslint-plugin-vue": "^4.0.0",
+    "node-sass": "^4.13.1",
+    "sass-loader": "^8.0.2"
+  }
 }
