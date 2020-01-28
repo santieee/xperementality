@@ -12,4 +12,7 @@ export class Token extends BaseEntity {
 
   @Column()
   token: string;
+
+  @Column()
+  fingerPrint: string;
 }

@@ -13,7 +13,7 @@ export class AuthController {
   }
 
   @Post('login')
-  async login(@Body() CreateUserDto: CreateUserDto): Promise<Object> {
-    return this.authService.login(CreateUserDto);
+  async login(@Body() CreateUserDto: CreateUserDto, @Body('fingerPrint') fingerPrint: Object): Promise<Object> {
+    return this.authService.login(CreateUserDto, fingerPrint);
   }
 }

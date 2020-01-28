@@ -1,3 +1,5 @@
+import getFingerPrint from '@/common/finger-print';
+
 export const state = () => ({
   profile: {
     token: '',
@@ -31,7 +33,8 @@ export const mutations = {
 export const actions = {
   async signIn({ commit }, payload) {
     try{
-      const response = await this.$axios.post('/auth/login', payload);
+      const fingerPrint = await getFingerPrint();
+      const response = await this.$axios.post('/auth/login', {...payload, fingerPrint});
       if(response.data && !response.data.token) return;
       $nuxt.$router.push('/');
       commit('SET_PROFILE', response.data);

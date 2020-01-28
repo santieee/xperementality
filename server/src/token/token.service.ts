@@ -19,11 +19,12 @@ export class TokenService {
     }
 
     async create(user): Promise<Object>{
-      const payload = { username: user.username, id: user.id };
+      const payload = { username: user.username, id: user.ida };
       const token = this.jwtService.sign(payload);
       let userToken = new Token();
       userToken.token = token;
-      userToken.uId = payload.id;
+      userToken.uId = user.id;
+      userToken.fingerPrint = user.fingerPrint
       const result = await userToken.save();
       return { token: result.token, id: user.id, username: payload.username }
     }

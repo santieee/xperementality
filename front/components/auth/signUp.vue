@@ -2,6 +2,7 @@
   <v-card>
     <v-form 
       v-model="valid"
+      @submit.prevent="sign"
     >
       <v-text-field
         v-model="form.username"
@@ -22,7 +23,8 @@
       ></v-text-field>
       <v-btn
         block
-        @click="sign"
+        type="submit"
+        @click.prevent="sign"
         class="mt-3"
       >
         sign up

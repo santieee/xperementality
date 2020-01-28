@@ -1,7 +1,10 @@
 <template>
   <div>
     <h1>Profile</h1>
-    {{profile}}
+    <div class="list">
+      <span>Id: {{ profile.id }}</span>
+      <span>Username: {{ profile.username }}</span>
+    </div>
   </div>
 </template>
 
@@ -27,5 +30,9 @@ import auth from '@/middleware/auth';
 </script>
 
 <style lang="scss" scoped>
-
+.list{
+  span{
+    display: block;
+  }
+}
 </style>

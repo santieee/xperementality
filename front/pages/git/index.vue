@@ -7,7 +7,8 @@
 <script>
   export default {
     name: 'git',
- 
+    methods:{
+    }
   };
 </script>
 
