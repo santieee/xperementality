@@ -13,6 +13,11 @@ export class TokenController {
     return await this.tokenService.getAll()
   }
 
+  @Post('refresh')
+  async refreshToken(@Body() user: Object){
+    return await this.tokenService.refresh(user)
+  }
+
   @UseGuards(AuthGuard('jwt'))
   @Delete()
   async deleteAll(@Body('userId') userId: number): Promise<DeleteResult>{

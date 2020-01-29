@@ -37,4 +37,8 @@ export class AuthService {
     await user.save()
     return await this.tokenService.create({...user, fingerPrint});
   }
+
+  async logout(token: string): Promise<Object> {
+    return await this.tokenService.delete(token);
+  }
 }

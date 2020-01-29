@@ -2,9 +2,10 @@ import getFingerPrint from '@/common/finger-print';
 
 export const state = () => ({
   profile: {
+    refreshToken: '',
     token: '',
     id: '',
-    username: '2',
+    username: '',
   }
 });
 
@@ -23,10 +24,16 @@ export const mutations = {
   },
   UNSET_PROFILE: (state) => {
     state.profile = {
+      refreshToken: '',
       token: '',
       id: '',
       username: '',
     };
+  },
+  SET_TOKENS: (state, payload) => {
+    const { token, refreshToken } = payload;
+    state.profile.token = token;
+    state.profile.refreshToken = refreshToken;
   }
 };
 
@@ -44,7 +51,8 @@ export const actions = {
   },
   async signUp({ commit }, payload) {
     try{
-      const response = await this.$axios.post('/auth/register', payload);
+      const fingerPrint = await getFingerPrint();
+      const response = await this.$axios.post('/auth/register', {...payload, fingerPrint});
       if(response.data && !response.data.token) return;
       $nuxt.$router.push('/');
       commit('SET_PROFILE', response.data);
@@ -52,12 +60,13 @@ export const actions = {
       console.log('err', e);
     }
   },
-  async logout({commit}){
+  async logout({commit, state}){
+    const token = state.profile.token; 
+    await this.$axios.post('/auth/logout', {token});
     commit('UNSET_PROFILE');
     $nuxt.$router.push('/');
   },
   async getProfile({ getters }){
-    console.log(getters.profile.username);
     const response = await this.$axios.get(`/user/profile/${getters.profile.username}`);
     return response.data;
   }

@@ -5,11 +5,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Token } from './token.entity'
 import { JwtService } from '@nestjs/jwt';
 import { DeleteResult } from 'typeorm';
-import getTime from 'date-fns/getTime'
 
 @Injectable()
 export class TokenService {
-  [x: string]: any;
   constructor(
     @InjectRepository(TokenRepository)
     private tokenRepository: TokenRepository,
@@ -38,8 +36,15 @@ export class TokenService {
       }
     }
 
-    async delete(uId: number, token: string): Promise<DeleteResult>{
-      return await this.tokenRepository.delete({ uId, token })
+    async refresh(user): Promise<Object>{
+      const oldToken = await this.tokenRepository.findOne({ refreshToken: user.refreshToken });
+      if(!oldToken) return 'WARNING!';
+      oldToken.remove()
+      return await this.create(user)
+    }
+
+    async delete(token: string): Promise<DeleteResult>{
+      return await this.tokenRepository.delete({ token })
     }
 
     async deleteAll(uId: number): Promise<DeleteResult>{
@@ -48,7 +53,6 @@ export class TokenService {
 
     async exists(uId: number, token: string): Promise<Boolean>{
       const tokenData = await this.tokenRepository.findOne({ uId, token });
-      
       return !!tokenData;
     }
 }

@@ -1,5 +1,4 @@
-export default function ({ store, redirect, app }) {
-  
+export default function ({ store, redirect, app }) {  
   if (!store.getters['auth/isAuth']) {
     return redirect('/auth');
   }
