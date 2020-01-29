@@ -33,13 +33,15 @@
     "bcryptjs": "^2.4.3",
     "class-transformer": "^0.2.3",
     "class-validator": "^0.11.0",
+    "date-fns": "^2.9.0",
     "passport": "^0.4.1",
     "passport-jwt": "^4.0.0",
     "pg": "^7.17.0",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.0",
     "rxjs": "^6.5.3",
-    "typeorm": "^0.2.22"
+    "typeorm": "^0.2.22",
+    "uuid": "^3.4.0"
   },
   "devDependencies": {
     "@nestjs/cli": "^6.9.0",

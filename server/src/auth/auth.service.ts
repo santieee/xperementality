@@ -28,13 +28,13 @@ export class AuthService {
     return await this.tokenService.create({...user, fingerPrint})
   }
 
-  async register(CreateUserDto: CreateUserDto){
+  async register(CreateUserDto: CreateUserDto, fingerPrint: Object): Promise<Object> {
     const { username, password } = CreateUserDto;
     if(await this.usersService.findOne({username})) return `user with username: ${username} already exist`
     const user = new User();
     user.username = username;
     user.password = bcrypt.hashSync(password, 8);
     await user.save()
-    return await this.tokenService.create(user);
+    return await this.tokenService.create({...user, fingerPrint});
   }
 }

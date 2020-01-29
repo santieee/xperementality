@@ -7,9 +7,9 @@ export class AuthController {
   constructor(private authService: AuthService){}
 
   @Post('register')
-  async createTask(@Body() CreateUserDto: CreateUserDto): Promise<Object> {
+  async createTask(@Body() CreateUserDto: CreateUserDto, @Body('fingerPrint') fingerPrint: Object): Promise<Object> {
     console.log(CreateUserDto)
-    return await this.authService.register(CreateUserDto)
+    return await this.authService.register(CreateUserDto, fingerPrint)
   }
 
   @Post('login')
