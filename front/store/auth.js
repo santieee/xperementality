@@ -1,4 +1,5 @@
 import getFingerPrint from '@/common/finger-print';
+import decodeJwt from '@/common/decode-jwt';
 
 export const state = () => ({
   profile: {
@@ -34,6 +35,10 @@ export const mutations = {
     const { token, refreshToken } = payload;
     state.profile.token = token;
     state.profile.refreshToken = refreshToken;
+  },
+  UNSET_TOKENS: (state) => {
+    state.profile.token = '';
+    state.profile.refreshToken = '';
   }
 };
 
@@ -65,6 +70,35 @@ export const actions = {
     await this.$axios.post('/auth/logout', {token});
     commit('UNSET_PROFILE');
     $nuxt.$router.push('/');
+  },
+  async refreshToken({commit, state}){
+    try{
+      if(!state.profile.refreshToken) return;
+      const fingerPrint = await getFingerPrint();
+      const payload = {...state.profile, fingerPrint};
+      commit('UNSET_TOKENS');
+      const response = await this.$axios.post('/token/refresh', payload);
+      commit('SET_TOKENS', response.data);
+    }catch{
+      commit('UNSET_PROFILE');
+      $nuxt.$router.push('/auth');
+    }
+  },
+  async isTokenExpired({state, dispatch}){
+    if(!state.profile.token || !state.profile.refreshToken) return false;
+    const tokenInfo = decodeJwt(state.profile.token);
+    const refreshTokenInfo = decodeJwt(state.profile.refreshToken);
+    const timeExpire = tokenInfo.exp;  
+    const timeExpireRefresh = refreshTokenInfo.expire;
+    const now = Math.ceil(new Date().getTime() / 1000);
+    const leeway = 3600; 
+    const leewayRefresh = 86400;
+    const refreshTokenExpired = (timeExpireRefresh - now) < 0;
+    if(refreshTokenExpired) return dispatch('logout');
+    const isTimeForUpdateByRefresh = (timeExpireRefresh - now - leewayRefresh) < 0;
+    const isTimeForUpdate = (timeExpire - now - leeway) < 0;
+    if(isTimeForUpdate || isTimeForUpdateByRefresh) return true;
+    else return false;
   },
   async getProfile({ getters }){
     const response = await this.$axios.get(`/user/profile/${getters.profile.username}`);

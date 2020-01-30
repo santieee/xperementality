@@ -1,5 +1,5 @@
 import * as uuid from 'uuid/v1';
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { TokenRepository } from './token.repository';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Token } from './token.entity'
@@ -20,13 +20,13 @@ export class TokenService {
 
     async create(user): Promise<Object>{
       const payload = { username: user.username, id: user.id };
+      const refreshTokenExpires = (Math.ceil(new Date().getTime()/1000) + 5000000) + "";
       const token = this.jwtService.sign(payload);
       let userToken = new Token();
       userToken.token = token;
       userToken.uId = user.id;
-      userToken.fingerPrint = user.fingerPrint;
-      userToken.refreshToken = uuid();
-      userToken.createTime = new Date().getTime() + '';
+      userToken.fingerPrint = JSON.stringify(user.fingerPrint);
+      userToken.refreshToken = this.jwtService.sign({...payload, expires: refreshTokenExpires});
       const result = await userToken.save();
       return { 
         token: result.token, 
@@ -38,8 +38,10 @@ export class TokenService {
 
     async refresh(user): Promise<Object>{
       const oldToken = await this.tokenRepository.findOne({ refreshToken: user.refreshToken });
-      if(!oldToken) return 'WARNING!';
+      if(!oldToken) return new NotFoundException();
+      const isValidFingrPrint = oldToken.fingerPrint == JSON.stringify(user.fingerPrint);
       oldToken.remove()
+      if(!isValidFingrPrint) return new NotFoundException();
       return await this.create(user)
     }
 

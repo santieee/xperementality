@@ -17,8 +17,5 @@ export class Token extends BaseEntity {
   refreshToken: string;
 
   @Column()
-  createTime: string;
-
-  @Column()
   fingerPrint: string;
 }

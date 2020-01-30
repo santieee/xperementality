@@ -46,7 +46,6 @@
     },
     methods:{
       async sign(){
-        console.log('sign!');
         if(!this.valid) return;
         this.$store.dispatch('auth/signIn', this.form);
       }
