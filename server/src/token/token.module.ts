@@ -12,7 +12,6 @@ import { TokenController } from './token.controller';
     TypeOrmModule.forFeature([TokenRepository]),
     JwtModule.register({
       secret: jwtConstants.secret,
-      signOptions: { expiresIn: '1d' },
     }),  
   ],
   providers: [TokenService, JwtStrategy],

@@ -1,7 +1,8 @@
-import { Controller, Get, Post, Body, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, UseGuards, Res, Header, Req, UseInterceptors } from '@nestjs/common';
 import { AuthService } from './auth.service' 
 import { CreateUserDto } from '../users/dto/create-user.dto'
 import { AuthGuard } from '@nestjs/passport';
+import { SetCookieInterceptor } from './auth.interceptor';
 
 @Controller('auth')
 export class AuthController {
@@ -13,8 +14,12 @@ export class AuthController {
     return await this.authService.register(CreateUserDto, fingerPrint)
   }
 
+  @UseInterceptors(SetCookieInterceptor)
   @Post('login')
-  async login(@Body() CreateUserDto: CreateUserDto, @Body('fingerPrint') fingerPrint: Object): Promise<Object> {
+  async login(
+    @Body() CreateUserDto: CreateUserDto, 
+    @Body('fingerPrint') fingerPrint: Object,
+  ): Promise<Object> {
     return this.authService.login(CreateUserDto, fingerPrint);
   }
 

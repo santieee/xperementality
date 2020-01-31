@@ -20,13 +20,12 @@ export class TokenService {
 
     async create(user): Promise<Object>{
       const payload = { username: user.username, id: user.id };
-      const refreshTokenExpires = (Math.ceil(new Date().getTime()/1000) + 5000000) + "";
-      const token = this.jwtService.sign(payload);
+      const token = this.jwtService.sign(payload, { expiresIn: '1d' });
       let userToken = new Token();
       userToken.token = token;
       userToken.uId = user.id;
       userToken.fingerPrint = JSON.stringify(user.fingerPrint);
-      userToken.refreshToken = this.jwtService.sign({...payload, expires: refreshTokenExpires});
+      userToken.refreshToken = this.jwtService.sign(payload, { expiresIn: '60d' });
       const result = await userToken.save();
       return { 
         token: result.token, 
