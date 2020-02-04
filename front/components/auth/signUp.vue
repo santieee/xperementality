@@ -7,12 +7,14 @@
       <v-text-field
         v-model="form.username"
         label="Login"
+        autocomplete="username"
         :rules="usernameRule"
       ></v-text-field>
       <v-text-field
         v-model="form.password"
         label="Password"
         type="password"
+        autocomplete="new-password"
         :rules="passwordRule"
       ></v-text-field>
       <v-text-field
@@ -20,12 +22,14 @@
         label="Repeat password"
         type="password"
         :rules="rpasswordRule"
+        autocomplete="new-password"
       ></v-text-field>
       <v-btn
         block
         type="submit"
         @click.prevent="sign"
         class="mt-3"
+        :disabled="!valid"
       >
         sign up
       </v-btn>

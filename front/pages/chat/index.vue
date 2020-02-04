@@ -1,6 +1,6 @@
 <template>
   <div>
-    GIT
+    CHAT
   </div>
 </template>
 

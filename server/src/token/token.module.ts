@@ -4,7 +4,7 @@ import { TokenRepository } from './token.repository';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { JwtModule } from '@nestjs/jwt';
 import { jwtConstants } from 'src/auth/constants';
-import { JwtStrategy } from 'src/auth/jwt.strategy';
+import { JwtStrategy } from './jwt.strategy';
 import { TokenController } from './token.controller';
 
 @Module({

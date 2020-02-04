@@ -17,4 +17,8 @@ export default function ({ $axios, app, store }) {
     }
     return Promise.reject(error);
   });
+
+  $axios.onError(error => {
+    store.dispatch('ui/snackbar', { msg: 'Error', type: 'error' });
+  });
 }

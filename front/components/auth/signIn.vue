@@ -8,11 +8,13 @@
       v-model="form.username"
       label="Login"
       :rules="usernameRule"
+      autocomplete="username"
     ></v-text-field>
     <v-text-field
       type="password"
       v-model="form.password"
       label="Password"
+      autocomplete="password"
       :rules="passwordRule"
     ></v-text-field>
     <v-btn
@@ -20,6 +22,7 @@
       type="submit"
       @click.prevent="sign"
       class="mt-3"
+      :disabled="!valid"
     >
       sign in
     </v-btn>

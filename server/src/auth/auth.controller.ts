@@ -2,27 +2,32 @@ import { Controller, Get, Post, Body, UseGuards, Res, Header, Req, UseIntercepto
 import { AuthService } from './auth.service' 
 import { CreateUserDto } from '../users/dto/create-user.dto'
 import { AuthGuard } from '@nestjs/passport';
-import { SetCookieInterceptor } from './auth.interceptor';
+import { SetCookieInterceptor } from './cookie/set-cookie.interceptor';
+import { UnSetCookieInterceptor } from './cookie/unset-cookie.interceptor';
 
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService){}
 
+  @UseInterceptors(SetCookieInterceptor)
   @Post('register')
-  async createTask(@Body() CreateUserDto: CreateUserDto, @Body('fingerPrint') fingerPrint: Object): Promise<Object> {
-    console.log(CreateUserDto)
-    return await this.authService.register(CreateUserDto, fingerPrint)
+  async createTask(
+    @Body() createUserDto: CreateUserDto, 
+    @Body('fingerPrint') fingerPrint: Object
+  ): Promise<Object> {
+    return await this.authService.register(createUserDto, fingerPrint)
   }
 
   @UseInterceptors(SetCookieInterceptor)
   @Post('login')
   async login(
-    @Body() CreateUserDto: CreateUserDto, 
+    @Body() createUserDto: CreateUserDto, 
     @Body('fingerPrint') fingerPrint: Object,
   ): Promise<Object> {
-    return this.authService.login(CreateUserDto, fingerPrint);
+    return this.authService.login(createUserDto, fingerPrint);
   }
 
+  @UseInterceptors(UnSetCookieInterceptor)
   @UseGuards(AuthGuard('jwt'))
   @Post('logout')
   async logout(@Body('token') token: string): Promise<Object> {

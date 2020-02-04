@@ -20,14 +20,3 @@
 
   </v-app-bar>
 </template>
-
-<script>
-import { mapGetters, mapActions } from 'vuex';
-export default {
-  methods:{
-    ...mapActions({
-      logout: 'auth/logout',
-    })
-  }
-};
-</script>

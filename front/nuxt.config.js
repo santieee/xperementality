@@ -16,20 +16,22 @@ module.exports = {
     "@/plugins/vuetify.js",
     "@/plugins/axios",
     { src: "@/store/plugins/persist.js", ssr: false },
+    { src: '~/plugins/nuxt-client-init.js', ssr: false }
   ],
   modules: [
     '@nuxtjs/axios',
     'cookie-universal-nuxt',
   ],
   axios: {
-    baseURL: 'http://localhost:4000'
+    baseURL: 'http://127.0.0.1:4000/',
   },
+ 
 
   css: ["~assets/scss/"],
 
   loading: { color: "#3B8070" },
   router: {
-    middleware: ["test"]
+    middleware: []
   },
   build: {
     extend(config, { isDev, isClient }) {

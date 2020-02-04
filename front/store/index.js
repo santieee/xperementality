@@ -1,8 +1,14 @@
 export const actions = {
-  nuxtServerInit({ commit }, { app }) {
-    const vuex = app.$cookies.get('vuex');
-    if(!vuex) return;
-    commit('auth/INIT', vuex.auth);
-    commit('ui/INIT', vuex.ui);
+  nuxtServerInit({ commit, dispatch }, { app }) {
+    const tokens = app.$cookies.get('_h');
+    dispatch('auth/initProfile', tokens);    
+
+    let isDarkTheme = app.$cookies.get('isDarkTheme');
+    if(isDarkTheme === undefined) isDarkTheme = true;
+    dispatch('ui/setTheme', isDarkTheme);
+  },
+  nuxtClientInit({commit, state}){
+    commit('auth/INIT');
+    if(state.auth.profile.reset) commit('auth/UNSET_PROFILE');
   }
 };

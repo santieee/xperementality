@@ -40,27 +40,31 @@
       </v-list-item-group>
     </v-list>
     <template v-slot:append>
+
       <div class="d-flex ma-5">
         <v-btn class="ma-auto p-2" @click="onChangeTheme">
           <v-icon>mdi-brightness-6</v-icon>
         </v-btn>
       </div>
-      <v-btn
-        block
-        @click="logout"
-      >
-        <v-icon>
-          mdi-logout
-        </v-icon>
-        Logout
-      </v-btn>
+      <client-only
+        v-if="isAuth"
+      >    
+        <v-btn
+          block     
+          @click="logout"
+        >
+          <v-icon>
+            mdi-logout
+          </v-icon>
+          Logout
+        </v-btn>
+      </client-only>
     </template>
   </v-navigation-drawer>
 </template>
 
 <script>
 import groups from '@/static/data/rootGroups';
-import { mapMutations } from 'vuex';
 import { mapGetters, mapActions } from 'vuex';
 export default {
   props:{
@@ -84,16 +88,17 @@ export default {
   },
   methods:{
     ...mapActions({
-     logout: 'auth/logout'
+      logout: 'auth/logout',
+      setTheme: 'ui/setTheme',
+      snackbar: 'ui/snackbar'
     }),
-    ...mapMutations('ui', ['CHANGE_THEME']),
     listener(){
       if(event.keyCode !== 27) return;
       this.$emit('update:isEnable', false);
     },
     onChangeTheme(){
       this.$vuetify.theme.dark = !this.$vuetify.theme.dark;
-      this.CHANGE_THEME();
+      this.setTheme(this.$vuetify.theme.dark);
     }
   },
   watch:{

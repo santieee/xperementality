@@ -3,6 +3,7 @@ import { TokenService } from './token.service';
 import { AuthGuard } from '@nestjs/passport';
 import { Token } from './token.entity';
 import { DeleteResult } from 'typeorm';
+import { UpdateTokenDto } from './dto/update-token.dto';
 
 @Controller('token')
 export class TokenController {
@@ -14,8 +15,8 @@ export class TokenController {
   }
 
   @Post('refresh')
-  async refreshToken(@Body() user: Object){
-    return await this.tokenService.refresh(user)
+  async refreshToken(@Body() updateTokenDto: UpdateTokenDto){
+    return await this.tokenService.refresh(updateTokenDto)
   }
 
   @UseGuards(AuthGuard('jwt'))

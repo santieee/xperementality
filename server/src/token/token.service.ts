@@ -1,10 +1,11 @@
-import * as uuid from 'uuid/v1';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { TokenRepository } from './token.repository';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Token } from './token.entity'
 import { JwtService } from '@nestjs/jwt';
 import { DeleteResult } from 'typeorm';
+import { CreateTokenDto } from './dto/create-token.dto';
+import { UpdateTokenDto } from './dto/update-token.dto';
 
 @Injectable()
 export class TokenService {
@@ -18,30 +19,30 @@ export class TokenService {
       return await this.tokenRepository.find()
     }
 
-    async create(user): Promise<Object>{
-      const payload = { username: user.username, id: user.id };
+    async create(createTokenDto: CreateTokenDto): Promise<Object>{
+      const payload = { username: createTokenDto.username, id: createTokenDto.id };
       const token = this.jwtService.sign(payload, { expiresIn: '1d' });
       let userToken = new Token();
       userToken.token = token;
-      userToken.uId = user.id;
-      userToken.fingerPrint = JSON.stringify(user.fingerPrint);
+      userToken.uId = createTokenDto.id;
+      userToken.fingerPrint = JSON.stringify(createTokenDto.fingerPrint);
       userToken.refreshToken = this.jwtService.sign(payload, { expiresIn: '60d' });
       const result = await userToken.save();
       return { 
         token: result.token, 
         refreshToken: result.refreshToken,
-        id: user.id, 
-        username: user.username 
+        id: createTokenDto.id, 
+        username: createTokenDto.username 
       }
     }
 
-    async refresh(user): Promise<Object>{
-      const oldToken = await this.tokenRepository.findOne({ refreshToken: user.refreshToken });
+    async refresh(updateTokenDto: UpdateTokenDto): Promise<Object>{
+      const oldToken = await this.tokenRepository.findOne({ refreshToken: updateTokenDto.refreshToken });
       if(!oldToken) return new NotFoundException();
-      const isValidFingrPrint = oldToken.fingerPrint == JSON.stringify(user.fingerPrint);
+      const isValidFingrPrint = oldToken.fingerPrint == JSON.stringify(updateTokenDto.fingerPrint);
       oldToken.remove()
       if(!isValidFingrPrint) return new NotFoundException();
-      return await this.create(user)
+      return await this.create(updateTokenDto)
     }
 
     async delete(token: string): Promise<DeleteResult>{
