@@ -1,11 +1,11 @@
 import { Controller, Post, Body, Get, UseGuards, Param } from '@nestjs/common';
-import { UsersService } from './users.service'
+import { UserService } from './user.service'
 import { AuthGuard } from '@nestjs/passport';
 import { User } from './user.entity';
 
 @Controller('user')
-export class UsersController {
-  constructor(private userService: UsersService){}
+export class UserController {
+  constructor(private userService: UserService){}
 
   @Get('list')
   async getUsers():Promise<User[]>{

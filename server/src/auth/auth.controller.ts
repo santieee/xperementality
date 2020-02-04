@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Body, UseGuards, Res, Header, Req, UseInterceptors } from '@nestjs/common';
 import { AuthService } from './auth.service' 
-import { CreateUserDto } from '../users/dto/create-user.dto'
+import { CreateUserDto } from '../user/dto/create-user.dto'
 import { AuthGuard } from '@nestjs/passport';
 import { SetCookieInterceptor } from './cookie/set-cookie.interceptor';
 import { UnSetCookieInterceptor } from './cookie/unset-cookie.interceptor';

@@ -1,14 +1,14 @@
 import * as bcrypt from 'bcryptjs'
 import { Injectable, UnauthorizedException, HttpStatus } from '@nestjs/common';
-import { UsersService } from '../users/users.service';
-import { User } from 'src/users/user.entity';
+import { UserService } from '../user/user.service';
+import { User } from 'src/user/user.entity';
 import { TokenService } from 'src/token/token.service';
-import { CreateUserDto } from '../users/dto/create-user.dto';
+import { CreateUserDto } from '../user/dto/create-user.dto';
 
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly usersService: UsersService,
+    private readonly usersService: UserService,
     private readonly tokenService: TokenService
   ) {}   
 

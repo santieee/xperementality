@@ -18,7 +18,6 @@ import drawerCp from '@/components/core/drawer';
 import snackbarCp from '@/components/core/snackbar';
 import preloaderCp from '@/components/core/preloader';
 
-
 export default {
   components:{
     headerCp,
