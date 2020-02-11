@@ -1,12 +1,22 @@
 <template>
   <div>
-    CHAT
-    <div
+    <v-sheet
       class="chat-window"
-      ref="chatWindow"
+      id="chat-window"
+      :elevation="10"
     >
-      <div
+    <template
+      v-if="!messages.length"
+    >
+       <v-skeleton-loader
+        v-for="i in 5"
+        :key="i"
+        type="list-item-three-line"
+      ></v-skeleton-loader>
+    </template>
+      <v-card
         class="message"
+        elevation="5"
         v-for="(item, i) in messages"
         :key="i"
       >
@@ -14,13 +24,14 @@
           class="message-head"
         >
           <span>{{item.user.username}}</span>
-          <span>{{parseDate(item.createdAt)}}</span>
-        </div>
-        
-        <span>{{item.message}}</span>
-        
-      </div>
-    </div>
+          <span
+            :title="showParseDate(item.createdAt)"
+          >{{showParseDateTime(item.createdAt)}}</span>
+        </div>   
+        <hr>
+        <span>{{item.message}}</span>       
+      </v-card>
+    </v-sheet>
     <v-form
       class="chat-sendbox"
       @submit.prevent="sendMessage"
@@ -34,9 +45,6 @@
         type="submit"
       >Send</v-btn>
     </v-form>
-    <button
-      @click="scrollingChatWindow"
-    >check</button>
   </div>
 </template>
 
@@ -52,19 +60,27 @@ import { mapGetters } from 'vuex';
     }),
     methods:{
       async sendMessage() {  
-        const response = await this.socket.emit('sendMessageAction', { msg: this.message, profile: this.profile });
+        await this.socket.emit('sendMessageAction', { msg: this.message, profile: this.profile });
+        this.message = '';
       },
-      parseDate(dateToParse){
+      showParseDateTime(dateToParse){
         const [date, time] = dateToParse.split('T');
-        const [yy, mm, dd] = date.split('-');
         const [hour, min, sec] = time.split('.')[0].split(':');
         return `${hour}:${min}:${sec}`;
       },
+      showParseDate(dateToParse){
+        const [date, time] = dateToParse.split('T');
+        const [yy, mm, dd] = date.split('-');
+        const [hour, min, sec] = time.split('.')[0].split(':');
+        return `${hour}:${min}:${sec} ${dd}.${mm}.${yy}`;
+      },
       scrollingChatWindow(){
-        if(!this.$refs.chatWindow) return;
-        const chatWindow = this.$refs.chatWindow;
-        const bottom = chatWindow.scrollHeight + 50;
-        this.$nextTick(() => chatWindow.scrollTo(0, bottom));
+        if(!process.client) return;  
+        this.$nextTick(() => {
+          const chatWindow = document.getElementById('chat-window');
+          const bottom = chatWindow.scrollHeight + 50;
+          chatWindow.scrollTo(0, bottom);
+        });
       },
       socketChatData(){
         this.socket.on('chatData', data => {
@@ -81,6 +97,9 @@ import { mapGetters } from 'vuex';
       this.socketChatData();
       this.socket.emit('getChatData');
     },
+    beforeDestroy(){
+      this.socket.close();
+    }
   };
 </script>
 
@@ -99,9 +118,8 @@ import { mapGetters } from 'vuex';
     overflow: auto;
     
     .message{
-      padding: 0 1rem;
-      border-top: 1px solid #fff;
-      border-bottom: 1px solid #fff;
+      margin: .25rem .5rem;
+      padding: .25rem 1rem;
     }
   }
   .chat-sendbox{

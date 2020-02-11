@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   head: {
     title: "Xperimentality",
     meta: [
@@ -15,6 +15,7 @@ module.exports = {
   plugins: [ 
     "@/plugins/vuetify.js",
     "@/plugins/axios",
+    "@/plugins/i18n",
     { src: "@/store/plugins/persist.js", ssr: false },
     { src: '~/plugins/nuxt-client-init.js', ssr: false }
   ],
@@ -25,8 +26,6 @@ module.exports = {
   axios: {
     baseURL: 'http://127.0.0.1:4000/',
   },
- 
-
   css: ["~assets/scss/"],
 
   loading: { color: "#3B8070" },

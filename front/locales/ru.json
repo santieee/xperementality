@@ -1,0 +1,13 @@
+{
+  "home": "Главная",
+  "guest": "Гость",
+  "chat": "Чат",
+  "profile": "Профиль",
+  "logout": "Выйти",
+  "sessions": "Сессии",
+  "token": "Токен",
+  "refreshToken": "Рефреш токен",
+  "sessionId": "Номер сессии",
+  "fingerPrint": "Отпечаток",
+  "createdAt": "Дата создания"
+}

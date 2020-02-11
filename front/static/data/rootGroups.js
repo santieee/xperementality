@@ -1,4 +1,4 @@
 export default [
-  {label: 'Home', path: '/'},
-  {label: 'Chat', path: '/chat'},
+  {label: 'home', path: '/'},
+  {label: 'chat', path: '/chat'},
 ];

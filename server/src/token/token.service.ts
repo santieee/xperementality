@@ -19,6 +19,10 @@ export class TokenService {
       return await this.tokenRepository.find()
     }
 
+    async getAllByUserId(uId): Promise<Token[]>{
+      return await this.tokenRepository.find({uId})
+    }
+
     async create(createTokenDto: CreateTokenDto): Promise<Object>{
       const payload = { username: createTokenDto.username, id: createTokenDto.id };
       const token = this.jwtService.sign(payload, { expiresIn: '1d' });

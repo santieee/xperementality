@@ -80,7 +80,6 @@ export const actions = {
       commit('SET_TOKENS', response.data);
     }catch(e){
       commit('UNSET_PROFILE');
-      $nuxt.$router.push('/auth');
     }
   },
   async isTokenExpired({state, dispatch}){

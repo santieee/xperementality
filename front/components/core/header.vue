@@ -7,7 +7,7 @@
     </v-toolbar-title>
 
     <v-spacer></v-spacer>
-
+    <langSwithcerCp/>
     <!-- <template v-slot:extension>
       <v-tabs
         align-with-title
@@ -20,3 +20,11 @@
 
   </v-app-bar>
 </template>
+<script>
+import langSwithcerCp from '@/components/core/language-switcher';
+export default {
+  components:{
+    langSwithcerCp
+  }
+};
+</script>

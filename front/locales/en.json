@@ -1,0 +1,13 @@
+{
+  "home": "Homepage",
+  "guest": "Guest",
+  "chat": "Chat",
+  "profile": "Profile",
+  "logout": "logout",
+  "sessions": "Sessions",
+  "token": "Token",
+  "refreshToken": "Refresh token",
+  "sessionId": "Session id",
+  "fingerPrint": "Finger print",
+  "createdAt": "Date of creation"
+}

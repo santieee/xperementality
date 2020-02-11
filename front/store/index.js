@@ -1,14 +1,9 @@
+import { initServer, initClient } from '@/common/initApp';
 export const actions = {
-  nuxtServerInit({ commit, dispatch }, { app }) {
-    const tokens = app.$cookies.get('_h');
-    dispatch('auth/initProfile', tokens);    
-
-    let isDarkTheme = app.$cookies.get('isDarkTheme');
-    if(isDarkTheme === undefined) isDarkTheme = true;
-    dispatch('ui/setTheme', isDarkTheme);
+  nuxtServerInit(ctx, ctxApp) {
+    initServer(ctx, ctxApp);
   },
-  nuxtClientInit({commit, state}){
-    commit('auth/INIT');
-    if(state.auth.profile.reset) commit('auth/UNSET_PROFILE');
+  nuxtClientInit(ctx){
+    initClient(ctx);
   }
 };

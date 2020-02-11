@@ -23,7 +23,7 @@
               </template>
               <template v-else>
                 <v-icon>mdi-account</v-icon>
-                Guest
+                {{ $t('guest') }}
               </template>
             </v-list-item-title> 
           </n-link>
@@ -34,18 +34,18 @@
           tag="v-list-item"
           :to="group.path"
         >
-          <v-list-item-title>{{ group.label }}</v-list-item-title>
+          <v-list-item-title>{{ $t(group.label) }}</v-list-item-title>
         </n-link>
 
       </v-list-item-group>
     </v-list>
     <template v-slot:append>
-
       <div class="d-flex ma-5">
         <v-btn class="ma-auto p-2" @click="onChangeTheme">
           <v-icon>mdi-brightness-6</v-icon>
         </v-btn>
       </div>
+
       <client-only
         v-if="isAuth"
       >    
@@ -56,7 +56,7 @@
           <v-icon>
             mdi-logout
           </v-icon>
-          Logout
+          {{ $t('logout') }}
         </v-btn>
       </client-only>
     </template>

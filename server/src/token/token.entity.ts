@@ -1,4 +1,4 @@
-import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, OneToOne } from 'typeorm'
+import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, OneToOne, CreateDateColumn } from 'typeorm'
 import { User } from "../user/user.entity";
 
 @Entity()
@@ -18,4 +18,7 @@ export class Token extends BaseEntity {
 
   @Column()
   fingerPrint: string;
+
+  @CreateDateColumn()
+  createdAt: string;
 }

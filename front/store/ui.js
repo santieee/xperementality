@@ -1,6 +1,8 @@
 export default {
   state: () => ({
     isDarkTheme: true,
+    locale: 'en',
+    locales: ['en', 'ru'],
     snackbar: {
       status: false,
       timeout: 3000,
@@ -21,12 +23,24 @@ export default {
     CLOSE_SNACKBAR: (state) => {
       state.snackbar.status = false;
       state.snackbar.msg = '';
+    },
+    CHANGE_LANG (state, locale) {
+      if (state.locales.includes(locale)) {
+        state.locale = locale;
+      }
     }
   },
   actions:{
     setTheme({commit}, isDarkTheme){
       commit('CHANGE_THEME', isDarkTheme);
       this.$cookies.set('isDarkTheme', isDarkTheme, {
+        path: '/',
+        maxAge: 60 * 60 * 24 * 360
+      });
+    },
+    setLang({commit}, isLang){
+      commit('CHANGE_LANG', isLang);
+      this.$cookies.set('isLang', isLang, {
         path: '/',
         maxAge: 60 * 60 * 24 * 360
       });
