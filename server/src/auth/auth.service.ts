@@ -1,5 +1,5 @@
 import * as bcrypt from 'bcryptjs'
-import { Injectable, UnauthorizedException, HttpStatus } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import { User } from 'src/user/user.entity';
 import { TokenService } from 'src/token/token.service';
@@ -24,7 +24,7 @@ export class AuthService {
   
   async login(CreateUserDto: CreateUserDto, fingerPrint: Object): Promise<Object> {
     const user = await this.validateUser(CreateUserDto);
-    if(!user) return HttpStatus.UNAUTHORIZED;
+    if(!user) return new UnauthorizedException();
     return await this.tokenService.create({...user, fingerPrint})
   }
 
