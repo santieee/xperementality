@@ -10,14 +10,34 @@
 
     <h2>{{ $t('sessions') }}</h2>
     <v-expansion-panels
-      class="col-5 session-details"
+      class="col-10 session-details"
     >
       <v-expansion-panel
         v-for="session in sessions"
         :key="session.id"
         class="session-info"
       >
-        <v-expansion-panel-header>{{ $t('sessionId') }}: {{session.id}}</v-expansion-panel-header>
+        <v-expansion-panel-header>
+          <span>{{ $t('sessionId') }}: {{session.id}}</span>
+          <span v-if="session.current">
+            <v-chip
+              color="green"
+              class="current-badge"
+              label
+              outlined
+            >
+              {{$t('current')}}
+            </v-chip>
+          </span>
+          <span class="close-session">
+            <v-icon 
+              :title="$t('closeSession')"
+              @click.native.stop="destroySession(session)"
+            >
+              mdi-close-circle
+            </v-icon>
+          </span>
+        </v-expansion-panel-header>
         <v-expansion-panel-content>
           <div><h3>{{ $t('token') }}:</h3> {{session.token}}</div>
           <hr>
@@ -50,13 +70,39 @@ import auth from '@/middleware/auth';
     }),
     async asyncData ({ store }){
       const data = await store.dispatch('auth/getProfile');
-      data.sessions = data.sessions.map( session => ({...session, fingerPrint: JSON.parse(session.fingerPrint)}));
+      data.sessions = data.sessions
+        .map( session => ({
+          ...session, 
+          fingerPrint: JSON.parse(session.fingerPrint),
+          current: session.token == store.getters['auth/profile'].token
+        }))
+        .reverse();
       return data;
     },
     methods:{
       ...mapActions({
-        getProfile: 'auth/getProfile'
-      })
+        getProfile: 'auth/getProfile',
+        closeSession: 'auth/closeSession',
+        logout: 'auth/logout'
+      }),
+      async getSessions(){
+        const data = await this.getProfile();
+        return data.sessions
+        .map( session => ({
+          ...session, 
+          fingerPrint: JSON.parse(session.fingerPrint),
+          current: session.token == this.$store.getters['auth/profile'].token
+        }))
+        .reverse();
+      },
+      async destroySession(session){
+        if(this.$store.getters['auth/profile'].token === session.token){
+          if(!confirm(this.$t('closeCurrentSession'))) return;
+          return this.logout();
+        }
+        await this.closeSession(session.token);
+        this.sessions = await this.getSessions();
+      }
     }
   };
 </script>
@@ -73,6 +119,17 @@ import auth from '@/middleware/auth';
   .session-info{
     *{
       word-wrap: break-word;
+    }
+    .current-badge{
+      float: right;
+      margin: 0 .5rem;
+    }
+    .close-session{
+      max-width: 30px;
+      & i:hover{
+        transition: .25s all;
+        color: red;
+      }
     }
   }
 }

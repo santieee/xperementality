@@ -49,9 +49,8 @@ export const actions = {
   async signIn({ commit }, payload) {
   const fingerPrint = await getFingerPrint();
   const response = await this.$axios.post('/auth/login', {...payload, fingerPrint}, {withCredentials: true});
-  console.log(response);
   if(response.data && response.data.status == '401') return this.dispatch('ui/snackbar', {msg: `Wrong credentials`, type: 'error'});;
-  $nuxt.$router.push('/');
+  $nuxt.$router.push('/profile');
   commit('SET_PROFILE', response.data);
   this.dispatch('ui/snackbar', {msg: `Hi ${payload.username}`});
   },
@@ -61,7 +60,7 @@ export const actions = {
     if(response.data && !response.data.token) return;
     $nuxt.$router.push('/');
     commit('SET_PROFILE', response.data);
-    this.dispatch('ui/snackbar', {msg: 'Success signup'} );
+    this.dispatch('ui/snackbar', {msg: `Hi ${payload.username}`});
   },
   async logout({commit, state}){
     const token = state.profile.token; 
@@ -77,6 +76,7 @@ export const actions = {
       const payload = {...state.profile, fingerPrint};
       commit('UNSET_TOKENS');
       const response = await this.$axios.post('/token/refresh', payload);
+      if(!response.data.token) return $nuxt.$router.push('/');
       commit('SET_TOKENS', response.data);
     }catch(e){
       commit('UNSET_PROFILE');
@@ -108,8 +108,12 @@ export const actions = {
     const response = await this.$axios.get(`/user/profile/${getters.profile.username}`);
     return response.data;
   },
+  async closeSession(ctx, token){
+    const response = await this.$axios.delete(`/token`, {data: {token}});
+    return response.data;
+  },
   async initProfile({commit}, tokens){
-    if(!Object.keys(tokens).length) return commit('SET_RESET', true);
+    if(!tokens) return commit('SET_RESET', true);
     const { token, refreshToken } = tokens;
     const { username, id } = decodeJwt(token);
     commit('SET_PROFILE', {token, refreshToken, username, id});

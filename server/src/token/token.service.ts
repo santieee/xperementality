@@ -49,8 +49,8 @@ export class TokenService {
       return await this.create(updateTokenDto)
     }
 
-    async delete(token: string): Promise<DeleteResult>{
-      return await this.tokenRepository.delete({ token })
+    async deleteByToken(token: string){
+      return await this.tokenRepository.delete({ token });
     }
 
     async deleteAll(uId: number): Promise<DeleteResult>{

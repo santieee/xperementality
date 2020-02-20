@@ -21,6 +21,12 @@ export class TokenController {
 
   @UseGuards(AuthGuard('jwt'))
   @Delete()
+  async logout(@Body('token') token: string): Promise<Object> {
+    return this.tokenService.deleteByToken(token)
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Delete()
   async deleteAll(@Body('userId') userId: number): Promise<DeleteResult>{
     return await this.tokenService.deleteAll(userId)
   }

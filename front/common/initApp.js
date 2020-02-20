@@ -1,5 +1,6 @@
 export function initServer({commit, dispatch}, {app}){
   const tokens = app.$cookies.get('_h');
+  console.log(tokens);
   dispatch('auth/initProfile', tokens);    
 
   let isDarkTheme = app.$cookies.get('isDarkTheme');

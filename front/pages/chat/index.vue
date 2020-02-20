@@ -1,62 +1,81 @@
 <template>
-  <div>
-    <v-sheet
-      class="chat-window"
-      id="chat-window"
-      :elevation="10"
-    >
-    <template
-      v-if="!messages.length"
-    >
-       <v-skeleton-loader
-        v-for="i in 5"
-        :key="i"
-        type="list-item-three-line"
-      ></v-skeleton-loader>
-    </template>
-      <v-card
-        class="message"
-        elevation="5"
-        v-for="(item, i) in messages"
-        :key="i"
+  <section>
+    <div class="chat">
+      <v-sheet
+        class="chat-window"
+        id="chat-window"
+        :elevation="10"
       >
-        <div
-          class="message-head"
+      <template
+        v-if="!messages.length"
+      >
+        <v-skeleton-loader
+          v-for="i in 5"
+          :key="i"
+          type="list-item-three-line"
+        ></v-skeleton-loader>
+      </template>
+        <v-card
+          class="message"
+          elevation="5"
+          v-for="(item, i) in messages"
+          :key="i"
         >
-          <span>{{item.user.username}}</span>
-          <span
-            :title="showParseDate(item.createdAt)"
-          >{{showParseDateTime(item.createdAt)}}</span>
-        </div>   
-        <hr>
-        <span>{{item.message}}</span>       
-      </v-card>
-    </v-sheet>
-    <v-form
-      class="chat-sendbox"
-      @submit.prevent="sendMessage"
-    >
-      <v-text-field
-        v-model="message"
-        outlined
-        dense
-      />
-      <v-btn 
-        type="submit"
-      >Send</v-btn>
-    </v-form>
-  </div>
+          <div
+            class="message-head"
+          >
+            <span>{{item.user.username}}</span>
+            <span
+              :title="showParseDate(item.createdAt)"
+            >{{showParseDateTime(item.createdAt)}}</span>
+          </div>   
+          <hr>
+          <span>{{item.message}}</span>       
+        </v-card>
+      </v-sheet>
+      <v-form
+        class="chat-sendbox"
+        @submit.prevent="sendMessage"
+      >
+        <v-text-field
+          v-model="message"
+          outlined
+          dense
+        />
+        <v-btn 
+          type="submit"
+        >Send</v-btn>
+      </v-form>
+      
+    </div>
+    <div class="chat-info">
+      <h2>{{$t('online')}}:</h2>
+      <template
+        v-for="(item, idx) in onlineUsers"
+      >
+        <span 
+          :class="[item.me ? 'self' : '']"
+          :key="idx"
+        >
+          {{item.user}}
+        </span>
+      </template>
+    </div>
+  </section>
 </template>
 
 <script>
 import io from 'socket.io-client';
 import { mapGetters } from 'vuex';
+import auth from '@/middleware/auth';
 
   export default {
     name: 'chat',
+    middleware: [auth],
     data: () => ({
       message: '',
-      messages: [] 
+      messages: [],
+      onlineUsers: []
     }),
     methods:{
       async sendMessage() {  
@@ -82,10 +101,16 @@ import { mapGetters } from 'vuex';
           chatWindow.scrollTo(0, bottom);
         });
       },
-      socketChatData(){
+      socketGetChatData(){
         this.socket.on('chatData', data => {
+          console.log(data);
           this.messages = data;
           this.scrollingChatWindow();
+        });
+      },
+      socketGetOnline(){
+        this.socket.on('online', data => {
+          this.onlineUsers = data.map( user => user === this.profile.username ? ({user, me: true}) : {user} );
         });
       }
     },
@@ -93,8 +118,9 @@ import { mapGetters } from 'vuex';
       ...mapGetters('auth', ['profile'])
     },
     created(){
-      this.socket = io('http://127.0.0.1:4000/');
-      this.socketChatData();
+      this.socket = io('http://127.0.0.1:4000/', {query: {profile: JSON.stringify(this.profile)} });
+      this.socketGetChatData();
+      this.socketGetOnline();
       this.socket.emit('getChatData');
     },
     beforeDestroy(){
@@ -104,39 +130,55 @@ import { mapGetters } from 'vuex';
 </script>
 
 <style lang="scss" scoped>
-  $width: 40%;
+  $chatWidth: 70%;
   @mixin chatWidth(){
     -webkit-box-flex: 0;
-    flex: 0 0 $width;
-    max-width: $width;
+    flex: 0 0 $chatWidth;
+    max-width: $chatWidth;
   }
-  .chat-window{
-    @include chatWidth();
-    padding: 1rem 0;
-    border: 1px solid #fff;
-    height: 350px;
-    overflow: auto;
-    
-    .message{
-      margin: .25rem .5rem;
-      padding: .25rem 1rem;
+  
+ 
+  section{
+    display: flex;
+    .chat{
+      @include chatWidth();
+      .chat-window{
+        padding: 1rem 0;
+        border: 1px solid #fff;
+        height: 350px;
+        overflow: auto;
+        
+        .message{
+          margin: .25rem .5rem;
+          padding: .25rem 1rem;
+        }
+      }
+      .chat-sendbox{
+        width: 100%;
+        display: flex;
+        margin: 2rem 0 !important;
+        padding: 0 !important;
+        justify-content: flex-end;
+        flex-direction: column;
+      }
+      .message{
+        display: flex;
+        flex-direction: column;
+        .message-head{
+          display: flex;
+          justify-content: space-between;
+        }
+      } 
     }
-  }
-  .chat-sendbox{
-    @include chatWidth();
-    display: flex;
-    margin: 2rem 0 !important;
-    padding: 0 !important;
-    justify-content: flex-end;
-    flex-direction: column;
-  }
-  .message{
-    display: flex;
-    flex-direction: column;
-
-    .message-head{
-      display: flex;
-      justify-content: space-between;
+    .chat-info{
+      margin-left: 2rem;
+      .self{
+        color: plum;
+        text-shadow: 0 0 10px;
+      }
+      span{
+        display: block;
+      }
     }
   }
 </style>

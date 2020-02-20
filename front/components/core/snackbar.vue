@@ -20,6 +20,7 @@
 
 <script>
 import { mapGetters, mapMutations } from 'vuex';
+
   export default {
     computed:{
       ...mapGetters('ui', ['snackbar']),
@@ -30,6 +31,11 @@ import { mapGetters, mapMutations } from 'vuex';
         set(v){
           if(!v) this.CLOSE_SNACKBAR();
         }
+      }
+    },
+    watch:{
+      snackbarStatus(v){
+        if(!v) return;
       }
     },
     methods:{

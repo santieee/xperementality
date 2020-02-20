@@ -9,5 +9,15 @@
   "refreshToken": "Рефреш токен",
   "sessionId": "Номер сессии",
   "fingerPrint": "Отпечаток",
-  "createdAt": "Дата создания"
+  "createdAt": "Дата создания",
+  "online": "Онлайн",
+  "closeSession": "Закрыть сессию",
+  "current": "Текущая",
+  "closeCurrentSession": "Это текущая сессия. Вы уверены?",
+  "speaker": "Спикер",
+  "browserNotSupport": "Ваш браузер не поддерживается",
+  "selectVoice": "Выберите голос",
+  "enterText": "Введите текст",
+  "speak": "Произнести",
+  "map": "Карта"
 }

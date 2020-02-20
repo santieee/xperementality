@@ -39,6 +39,6 @@ export class AuthService {
   }
 
   async logout(token: string): Promise<Object> {
-    return await this.tokenService.delete(token);
+    return await this.tokenService.deleteByToken(token);
   }
 }

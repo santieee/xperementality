@@ -9,5 +9,15 @@
   "refreshToken": "Refresh token",
   "sessionId": "Session id",
   "fingerPrint": "Finger print",
-  "createdAt": "Date of creation"
+  "createdAt": "Date of creation",
+  "online": "Online",
+  "closeSession": "Close Session",
+  "current": "Current",
+  "closeCurrentSession": "It`s current session. Are you sure?",
+  "speaker": "Speaker",
+  "browserNotSupport": "Your browser not support",
+  "selectVoice": "Select voice",
+  "enterText": "Entry text",
+  "speak": "Speak",
+  "map": "Map"
 }

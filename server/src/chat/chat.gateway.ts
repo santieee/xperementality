@@ -44,7 +44,6 @@ export class ChatGateWay implements OnGatewayInit, OnGatewayConnection, OnGatewa
     if(!username || this.users.includes(username)) return;
     this.users.push(username);
     this.server.emit('online', this.users);
-    console.log('+', this.users)
   }
 
   async handleDisconnect(client: Socket){
@@ -52,6 +51,5 @@ export class ChatGateWay implements OnGatewayInit, OnGatewayConnection, OnGatewa
     if(!username) return;
     this.users.splice(this.users.indexOf(username), 1)
     this.server.emit('online', this.users);
-    console.log('-',this.users)
   }
 } 
