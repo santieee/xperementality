@@ -4,6 +4,8 @@
   "chat": "Chat",
   "profile": "Profile",
   "logout": "logout",
+  "signin": "Sign In",
+  "signup": "Sign Up",
   "sessions": "Sessions",
   "token": "Token",
   "refreshToken": "Refresh token",
@@ -19,5 +21,6 @@
   "selectVoice": "Select voice",
   "enterText": "Entry text",
   "speak": "Speak",
-  "map": "Map"
+  "map": "Map",
+  "speakerGreeting": "Hi! You can write text and i read it."
 }

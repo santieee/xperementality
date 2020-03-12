@@ -11,7 +11,7 @@ export default {
   styleResources: {
     scss: ["~assets/scss/variables.scss"]
   },
-  buildModules: [["@nuxtjs/style-resources"]],
+  // buildModules: [["@nuxtjs/style-resources"]],
   plugins: [ 
     "@/plugins/vuetify.js",
     "@/plugins/axios",
@@ -24,7 +24,7 @@ export default {
     'cookie-universal-nuxt',
   ],
   axios: {
-    baseURL: 'http://127.0.0.1:4000/',
+    baseURL: 'http://127.0.0.1:4000/api/',
   },
   css: ["~assets/scss/"],
 

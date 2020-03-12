@@ -1,3 +1,5 @@
+import Vue from 'vue';
+
 export default {
   state: () => ({
     isDarkTheme: true,
@@ -12,6 +14,7 @@ export default {
   }),
   getters:{
     snackbar: state => state.snackbar,
+    lang: state => state.locale
   },
   mutations: {
     CHANGE_THEME: (state, isDarkTheme) => {
@@ -33,6 +36,7 @@ export default {
   actions:{
     setTheme({commit}, isDarkTheme){
       commit('CHANGE_THEME', isDarkTheme);
+      Vue.prototype.$nuxt.$vuetify.theme.dark = isDarkTheme;
       this.$cookies.set('isDarkTheme', isDarkTheme, {
         path: '/',
         maxAge: 60 * 60 * 24 * 360

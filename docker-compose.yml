@@ -1,0 +1,50 @@
+version: "3"
+
+services:
+  nuxt:
+    build: ./front/
+    container_name: nuxt
+    restart: always
+    ports:
+      - "3000:3000"
+    command:
+      "npm run start"
+  nestjs:
+    build: ./server/
+    container_name: nest
+    restart: always
+    ports:
+      - "4000:4000"
+    environment:
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_USER=spone
+      - DB_PW=789789        
+    depends_on:
+      - postgres
+    links:
+      - postgres:postgres
+  nginx:
+    image: nginx:1.17
+    container_name: nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx:/etc/nginx/conf.d
+    depends_on:
+      - nuxt
+  postgres:
+    image: postgres
+    restart: always
+    environment:
+      - POSTGRES_USER=spone
+      - POSTGRES_PASSWORD=789789
+    ports:
+      - 5432:5432
+    volumes:
+      - ./:/var/lib/postgresql/
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080

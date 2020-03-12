@@ -65,7 +65,8 @@
 
 <script>
 import groups from '@/static/data/rootGroups';
-import { mapGetters, mapActions } from 'vuex';
+import { mapGetters, mapActions, mapState } from 'vuex';
+
 export default {
   props:{
     isEnable:{
@@ -78,6 +79,7 @@ export default {
   }),
   computed:{
     ...mapGetters('auth',['isAuth', 'profile']),
+    ...mapState('ui',['isDarkTheme']),
     isEnableComputed:{
       get(){ return this.isEnable; },
       set(v){ this.$emit('update:isEnable', v); }
@@ -97,8 +99,7 @@ export default {
       this.$emit('update:isEnable', false);
     },
     onChangeTheme(){
-      this.$vuetify.theme.dark = !this.$vuetify.theme.dark;
-      this.setTheme(this.$vuetify.theme.dark);
+      this.setTheme(!this.isDarkTheme);
     }
   },
   watch:{

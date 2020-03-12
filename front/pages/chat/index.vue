@@ -7,7 +7,7 @@
         :elevation="10"
       >
       <template
-        v-if="!messages.length"
+        v-if="loader"
       >
         <v-skeleton-loader
           v-for="i in 5"
@@ -18,19 +18,22 @@
         <v-card
           class="message"
           elevation="5"
-          v-for="(item, i) in messages"
+          v-for="(message, i) in messagesComputed"
           :key="i"
+          :color="message.self ? 'primary': ''"
         >
           <div
             class="message-head"
           >
-            <span>{{item.user.username}}</span>
+            <span>{{message.user.username}}</span>
             <span
-              :title="showParseDate(item.createdAt)"
-            >{{showParseDateTime(item.createdAt)}}</span>
+              :title="message.createdAt"
+            >
+              {{message.createdAt}}
+            </span>
           </div>   
           <hr>
-          <span>{{item.message}}</span>       
+          <span>{{message.message}}</span>       
         </v-card>
       </v-sheet>
       <v-form
@@ -51,10 +54,10 @@
     <div class="chat-info">
       <h2>{{$t('online')}}:</h2>
       <template
-        v-for="(item, idx) in onlineUsers"
+        v-for="(item, idx) in onlineUsersComputed"
       >
         <span 
-          :class="[item.me ? 'self' : '']"
+          :class="[item.self ? 'self' : '']"
           :key="idx"
         >
           {{item.user}}
@@ -75,7 +78,8 @@ import auth from '@/middleware/auth';
     data: () => ({
       message: '',
       messages: [],
-      onlineUsers: []
+      onlineUsers: [],
+      loader: true
     }),
     methods:{
       async sendMessage() {  
@@ -95,27 +99,36 @@ import auth from '@/middleware/auth';
       },
       scrollingChatWindow(){
         if(!process.client) return;  
-        this.$nextTick(() => {
-          const chatWindow = document.getElementById('chat-window');
-          const bottom = chatWindow.scrollHeight + 50;
-          chatWindow.scrollTo(0, bottom);
-        });
+        const chatWindow = document.getElementById('chat-window');
+        if(!chatWindow) return;
+        const bottom = chatWindow.scrollHeight + 50;
+        chatWindow.scrollTo(0, bottom);
       },
       socketGetChatData(){
         this.socket.on('chatData', data => {
-          console.log(data);
           this.messages = data;
           this.scrollingChatWindow();
+          this.loader = false;
         });
       },
       socketGetOnline(){
         this.socket.on('online', data => {
-          this.onlineUsers = data.map( user => user === this.profile.username ? ({user, me: true}) : {user} );
+          this.onlineUsers = data;
         });
       }
     },
     computed:{
-      ...mapGetters('auth', ['profile'])
+      ...mapGetters('auth', ['profile']),
+      messagesComputed(){
+        return this.messages.map( msg => { 
+          msg.self = msg.user.username === this.profile.username ? true : false;
+          msg.createdAt = this.showParseDate(msg.createdAt);
+          return msg;
+        });
+      },
+      onlineUsersComputed(){
+        return this.onlineUsers.map( user => user === this.profile.username ? {user, self: true} : {user, self: false} );
+      }
     },
     created(){
       this.socket = io('http://127.0.0.1:4000/', {query: {profile: JSON.stringify(this.profile)} });

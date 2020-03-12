@@ -1,7 +1,7 @@
 <template>
   <div>
     <client-only>
-      <h1 class="mb-5">Speaker</h1>
+      <h1 class="mb-5">{{$t('speaker')}}</h1>
       <div v-if="!isWork">{{$t('browserNotSupport')}}</div>
       <v-form
         v-else 
@@ -38,6 +38,7 @@
 </template>
 
 <script>
+import {mapGetters} from 'vuex';
   export default {
     name: 'speaker',
     data: () => ({
@@ -46,13 +47,16 @@
       selectedVoice: {},
       text: ""
     }),
+    computed:{
+      ...mapGetters('ui', ['lang'])
+    },
     mounted(){
       if(!window.speechSynthesis) this.isWork = false;
       this.voices = window.speechSynthesis.getVoices();
       setTimeout(() => {
         this.voices = window.speechSynthesis.getVoices();
-        this.selectedVoice = this.voices[0];
-        // this.speak('Здраствуй');
+        this.selectedVoice = this.lang == 'en' ? this.voices[1] : this.voices[0];
+        this.speak(this.$t('speakerGreeting'));
       }, 100);
     },
     methods:{

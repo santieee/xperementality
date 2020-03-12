@@ -73,7 +73,7 @@
       async sign(){
         if(!this.validate()) return;
         const regData = {
-          username: this.form.username.replace(/^./, a => a.toUpperCase()),
+          username: this.form.username,
           password: this.form.password, 
         };
         this.$store.dispatch('auth/signUp', regData);

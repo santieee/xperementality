@@ -13,19 +13,19 @@
     "precommit": "npm run lint"
   },
   "dependencies": {
-    "@nuxtjs/axios": "^5.9.3",
-    "cookie-universal-nuxt": "^2.1.0",
+    "@nuxtjs/axios": "^5.9.5",
+    "cookie-universal-nuxt": "^2.1.2",
     "fingerprintjs2": "^2.1.0",
     "nuxt": "^2.0.0",
     "socket.io-client": "^2.3.0",
-    "vue-i18n": "^8.15.3",
-    "vuex-persistedstate": "^2.7.0"
+    "vue-i18n": "^8.15.5",
+    "vuex-persistedstate": "^2.7.1"
   },
   "devDependencies": {
-    "@mdi/font": "^4.8.95",
+    "@mdi/font": "^4.9.95",
     "@nuxtjs/style-resources": "^1.0.0",
-    "@nuxtjs/vuetify": "^1.10.2",
-    "babel-eslint": "^10.0.1",
+    "@nuxtjs/vuetify": "^1.11.0",
+    "babel-eslint": "^10.1.0",
     "eslint": "^4.19.1",
     "eslint-friendly-formatter": "^4.0.1",
     "eslint-loader": "^2.1.1",

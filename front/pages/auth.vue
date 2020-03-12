@@ -7,13 +7,13 @@
         class="col-6"
         @click="componentId = 'signIn'"
       >
-      Sign In
+      {{ $t('signin') }}
       </v-tab>
       <v-tab 
         class="col-6"
         @click="componentId = 'signUp'"
       >
-      Sign Up
+      {{ $t('signup') }}
       </v-tab>
     </v-tabs>
     <component 

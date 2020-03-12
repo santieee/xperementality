@@ -1,16 +1,41 @@
 <template>
   <div> 
+   
     <div 
       class="list"
-    >
-      <h1>{{ $t('profile') }}</h1>
-      <span>Id: {{ profile.id }}</span>
-      <span>Username: {{ profile.username }}</span>    
+    > 
+      <div class="profile-avatar">
+        <v-avatar
+          color="primary"
+          class="avatar"
+          size="100"
+          @click="uploadPhoto"
+        > 
+          <client-only>
+            <img :src='avatar'>
+          </client-only>
+        </v-avatar>
+      </div>
+      <div class="profile">
+        <h1>{{ $t('profile') }}</h1>
+        <span>Id: {{ profile.id }}</span>
+        <span>Username: {{ profile.username }}</span>  
+      </div>  
+      <div class="profile">
+        <client-only>
+          <input
+            ref="uploadPhoto"
+            type="file"
+            v-show="false"
+            @change="savePhoto"
+          />
+        </client-only>
+      </div>
     </div>
 
     <h2>{{ $t('sessions') }}</h2>
     <v-expansion-panels
-      class="col-10 session-details"
+      class="col-12 session-details"
     >
       <v-expansion-panel
         v-for="session in sessions"
@@ -59,49 +84,43 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 import auth from '@/middleware/auth';
 
   export default {
     middleware: [auth],
-    data: () => ({
-      profile: {},
-      sessions: []
-    }),
-    async asyncData ({ store }){
-      const data = await store.dispatch('auth/getProfile');
-      data.sessions = data.sessions
-        .map( session => ({
-          ...session, 
-          fingerPrint: JSON.parse(session.fingerPrint),
-          current: session.token == store.getters['auth/profile'].token
-        }))
-        .reverse();
-      return data;
+    async mounted(){
+      await this.getProfile();
+    },
+    computed: {
+      ...mapGetters('auth',['profile', 'sessions']),
+      avatar(){
+        if(!this.profile.photoPath) return `/image/userphoto/default.jpg`;
+        return this.profile.photoPath;
+      }
     },
     methods:{
       ...mapActions({
         getProfile: 'auth/getProfile',
         closeSession: 'auth/closeSession',
-        logout: 'auth/logout'
+        logout: 'auth/logout',
+        saveAvatar: 'auth/saveAvatar'
       }),
-      async getSessions(){
-        const data = await this.getProfile();
-        return data.sessions
-        .map( session => ({
-          ...session, 
-          fingerPrint: JSON.parse(session.fingerPrint),
-          current: session.token == this.$store.getters['auth/profile'].token
-        }))
-        .reverse();
+      uploadPhoto(){
+        this.$refs.uploadPhoto.click();
+      },
+      async savePhoto($event){
+        const formData = new FormData();
+        formData.append('photo', $event.target.files[0]);
+        this.saveAvatar(formData);
       },
       async destroySession(session){
-        if(this.$store.getters['auth/profile'].token === session.token){
+        if(this.profile.token === session.token){
           if(!confirm(this.$t('closeCurrentSession'))) return;
           return this.logout();
         }
         await this.closeSession(session.token);
-        this.sessions = await this.getSessions();
+        await this.getProfile();
       }
     }
   };
@@ -110,6 +129,16 @@ import auth from '@/middleware/auth';
 <style lang="scss" scoped>
 .list{
   margin-bottom: 3rem;
+  display: flex;
+  .profile{
+    width: 50%;
+    &-avatar{
+      width: 150px; 
+    }
+  }
+  .avatar{
+    cursor: pointer;
+  }
   span{
     display: block;
   }

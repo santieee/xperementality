@@ -7,13 +7,20 @@ export const state = () => ({
     token: '',
     id: '',
     username: '',
-  }
+    photoName: '',
+  },
+  sessions: []
 });
 
 export const getters = {
   isAuth: state => !!state.profile.token,
   token: state => state.profile.token,
-  profile: state => state.profile
+  profile: state => state.profile,
+  sessions: state => state.sessions.map( session => ({
+    ...session, 
+    fingerPrint: JSON.parse(session.fingerPrint),
+    current: session.token == state.profile.token
+  })).reverse()
 };
 
 export const mutations = {
@@ -24,7 +31,11 @@ export const mutations = {
     state.profile.reset = flag;
   },
   SET_PROFILE: (state, payload) => {
-    state.profile = payload;
+    state.profile = {
+      ...payload,
+      token: state.profile.token,
+      refreshToken: state.profile.refreshToken
+    };
   },
   UNSET_PROFILE: (state) => {
     state.profile = {
@@ -32,6 +43,8 @@ export const mutations = {
       token: '',
       id: '',
       username: '',
+      photoPath: '',
+      sessions: []
     };
   },
   SET_TOKENS: (state, payload) => {
@@ -42,7 +55,13 @@ export const mutations = {
   UNSET_TOKENS: (state) => {
     state.profile.token = '';
     state.profile.refreshToken = '';
-  }
+  },
+  SET_SESSIONS: (state, sessions) => {
+    state.sessions = sessions;
+  },
+  SET_PHOTOPATH: (state, photoPath) => {
+    state.profile.photoPath = photoPath; 
+  },
 };
 
 export const actions = {
@@ -51,6 +70,8 @@ export const actions = {
   const response = await this.$axios.post('/auth/login', {...payload, fingerPrint}, {withCredentials: true});
   if(response.data && response.data.status == '401') return this.dispatch('ui/snackbar', {msg: `Wrong credentials`, type: 'error'});;
   $nuxt.$router.push('/profile');
+  const { token, refreshToken } = response.data;
+  commit('SET_TOKENS', { token, refreshToken });
   commit('SET_PROFILE', response.data);
   this.dispatch('ui/snackbar', {msg: `Hi ${payload.username}`});
   },
@@ -59,6 +80,8 @@ export const actions = {
     const response = await this.$axios.post('/auth/register', {...payload, fingerPrint}, {withCredentials: true});
     if(response.data && !response.data.token) return;
     $nuxt.$router.push('/');
+    const { token, refreshToken } = response.data;
+    commit('SET_TOKENS', { token, refreshToken });
     commit('SET_PROFILE', response.data);
     this.dispatch('ui/snackbar', {msg: `Hi ${payload.username}`});
   },
@@ -104,9 +127,21 @@ export const actions = {
     if(isTimeForUpdate || isTimeForUpdateByRefresh) return true;
     else return false;
   },
-  async getProfile({ getters }){
+  async getProfile({ getters, commit }){
     const response = await this.$axios.get(`/user/profile/${getters.profile.username}`);
+    let {profile, sessions} = response.data;
+    commit('SET_PROFILE', profile);
+    commit('SET_SESSIONS', sessions);
     return response.data;
+  },
+  async saveAvatar({ commit }, photo){
+    const response = await this.$axios({
+      method: 'post',
+      url: '/user/avatar',
+      data: photo,
+      headers: {'Content-Type': 'multipart/form-data' }
+    });
+    commit('SET_PHOTOPATH', response.data);
   },
   async closeSession(ctx, token){
     const response = await this.$axios.delete(`/token`, {data: {token}});
@@ -116,6 +151,7 @@ export const actions = {
     if(!tokens) return commit('SET_RESET', true);
     const { token, refreshToken } = tokens;
     const { username, id } = decodeJwt(token);
-    commit('SET_PROFILE', {token, refreshToken, username, id});
+    commit('SET_TOKENS', {token, refreshToken,});
+    commit('SET_PROFILE', {username, id});  
   }
 };
