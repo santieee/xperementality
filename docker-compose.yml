@@ -2,7 +2,7 @@ version: "3"
 
 services:
   nuxt:
-    image: spone789/xrplf:front
+    build: ./front
     container_name: nuxt
     restart: always
     ports:
@@ -10,7 +10,7 @@ services:
     command:
       "npm run start"
   nestjs:
-    image: spone789/xprlapi:0.1
+    build: ./server
     container_name: nest
     restart: always
     ports:
